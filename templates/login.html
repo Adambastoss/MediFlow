@@ -7,20 +7,40 @@
         <form method="post" style="padding-top: 30px;">
             <legend>Login</legend>
                 <hr>
-            <div class="form-group" style="max-width: 35vh;">
-              <label for="exampleInputEmail1">Endereço de email</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Seu email">
-              <small id="emailHelp" class="form-text text-muted">Nunca vamos compartilhar seu email, com ninguém.</small>
+                <div class="form-group" style="max-width: 35vh;">
+                  {{ form_login.email.label (class="form-control-label") }}
+                  
+                  {% if form_login.email.errors %}
+                      {{ form_login.email (class="form-control is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for erro in form_login.email.errors %}
+                              {{ erro }}
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form_login.email (class="form-control") }}
+                  {% endif %}     
+              </div>
+              
+              <div class="form-group" style="max-width: 35vh;">
+                {{ form_login.senha.label (class="form-control-label")}}
+                {% if form_login.senha.errors %}
+                      {{ form_login.senha (class="form-control is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for erro in form_login.senha.errors %}
+                              {{ erro }}
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                      {{ form_login.senha (class="form-control") }}
+                  {% endif %} 
             </div>
-            <div class="form-group" style="max-width: 35vh;">
-              <label for="exampleInputPassword1">Senha</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha">
+            <div class="form-group" style="padding-left: 19px;">
+                {{ form_login.lembrar_dados (class="form-check-input") }}
+                {{ form_login.lembrar_dados.label (class="form-check-label") }}
             </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Clique em mim</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            </fieldset>
+            {{ form_login.btn_logar (class="btn btn-primary")}}
           </form>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
