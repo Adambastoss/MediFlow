@@ -3,10 +3,6 @@ from MediFlow import app
 from MediFlow.forms import FormLogin 
 
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
-
 @app.route('/', methods=['POST', 'GET'])
 def login():
     form_login = FormLogin()
@@ -14,5 +10,12 @@ def login():
         flash('Login realizado com sucesso', 'alert-success')
         return redirect(url_for('home'))
     return render_template('login.html', form_login=form_login)
+
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
+
 
 
