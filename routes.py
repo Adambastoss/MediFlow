@@ -16,6 +16,21 @@ def login():
 def home():
     return render_template('home.html')
 
+@app.route('/pacientes')
+def pacientes():
+    return render_template('pacientes.html')
+
+@app.route('/consultas')
+def consultas():
+    return render_template('consultas.html')
+
+@app.route('/funcionarios')
+def funcionarios():
+    return render_template('funcionarios.html')
+    
+@app.route('/precos')
+def precos():
+    return render_template('precos.html')
 
 
 

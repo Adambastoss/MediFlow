@@ -4,23 +4,19 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding-left: 40px;">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="">Home</a>
+            <a class="nav-link" aria-current="page" href="{{url_for('home')}}">Home</a>
           </li>
           <li class="nav-item" style="padding-left: 20px">
-            <a class="nav-link" href="">Pacientes</a>
+            <a class="nav-link" href="{{url_for('pacientes')}}">Pacientes</a>
           </li>
           <li class="nav-item" style="padding-left: 20px">
-            <a class="nav-link" href="">Consultas</a>
+            <a class="nav-link" href="{{url_for('funcionarios')}}">Funcionarios</a>
           </li>
-          <li class="nav-item dropdown" style="padding-left: 20px">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Preços
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Consultar</a>
-              <a class="dropdown-item" href="#">Cadastrar</a>
-              <a class="dropdown-item" href="#">Alterar</a>
-            </div>
+          <li class="nav-item" style="padding-left: 20px">
+            <a class="nav-link" href="{{url_for('consultas')}}">Consultas</a>
+          </li>
+          <li class="nav-item" style="padding-left: 20px">
+            <a class="nav-link" href="{{url_for('precos')}}">Preços</a>
           </li>
           </div>
         </ul>
