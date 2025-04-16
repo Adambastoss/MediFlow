@@ -1,9 +1,6 @@
+from MediFlow import db
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
-class Procedimento(db.Model):
+class Procedimentos(db.Model):
     __tablename__ = 'PROCEDIMENTOS'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -12,4 +9,4 @@ class Procedimento(db.Model):
     preco = db.Column(db.Numeric(10, 2), nullable=False)
     descricao = db.Column(db.Text)
     ativo = db.Column(db.Boolean, default=True)
-    tempo_estimado = db.Column(db.Time)
+    tempo_estimado = db.Column(db.String(8))

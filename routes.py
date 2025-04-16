@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from MediFlow import app
-from MediFlow.forms import FormLogin 
+from MediFlow.forms import FormLogin
+from MediFlow.models import Procedimentos
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -28,9 +29,9 @@ def consultas():
 def funcionarios():
     return render_template('funcionarios.html')
     
-@app.route('/precos')
-def precos():
-    return render_template('precos.html')
+@app.route('/procedimentos')
+def procedimentos():
+    return render_template('procedimentos.html')
 
 
 
