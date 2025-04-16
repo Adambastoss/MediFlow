@@ -1,5 +1,5 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from MediFlow import app
+from flask import Flask, render_template, url_for, flash, redirect, request
+from MediFlow import app, db
 from MediFlow.forms import FormLogin
 from MediFlow.models import Procedimentos
 
@@ -33,6 +33,20 @@ def funcionarios():
 def procedimentos():
     procedimentos = Procedimentos.query.all()  # Obtendo os procedimentos do banco
     return render_template('procedimentos.html', procedimentos=procedimentos)
+
+@app.route('/procedimentos/editar/<int:id>', methods=['POST'])
+def editar_procedimento_modal(id):
+    procedimento = Procedimentos.query.get_or_404(id)
+
+    procedimento.nome = request.form['nome']
+    procedimento.categoria = request.form['categoria']
+    procedimento.preco = request.form['preco']
+    procedimento.descricao = request.form['descricao']
+    procedimento.ativo = True if request.form.get('ativo') == 'on' else False
+    procedimento.tempo_estimado = request.form['tempo_estimado']
+
+    db.session.commit()
+    return redirect(url_for('procedimentos'))
 
 
 
