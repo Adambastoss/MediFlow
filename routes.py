@@ -31,7 +31,8 @@ def funcionarios():
     
 @app.route('/procedimentos')
 def procedimentos():
-    return render_template('procedimentos.html')
+    procedimentos = Procedimentos.query.all()  # Obtendo os procedimentos do banco
+    return render_template('procedimentos.html', procedimentos=procedimentos)
 
 
 

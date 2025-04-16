@@ -20,40 +20,41 @@
 {% endblock %}
 
 {% block body %}
-        <div class="containerm">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">NOME</th>
-                    <th scope="col">CATEGORIA</th>
-                    <th scope="col">PRECO</th>
-                    <th scope="col">DESCRICAO</th>
-                    <th scope="col">ATIVO</th>
-                    <th scope="col">TEMPO_ESTIMADO</th>
-                    <th scope="col">OPÇÕES</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>
+<div class="containerm">
+  <table class="table table-striped">
+      <thead>
+          <tr>
+              <th scope="col">ID</th>
+              <th scope="col">NOME</th>
+              <th scope="col">CATEGORIA</th>
+              <th scope="col">PRECO</th>
+              <th scope="col">DESCRICAO</th>
+              <th scope="col">ATIVO</th>
+              <th scope="col">TEMPO_ESTIMADO</th>
+              <th scope="col">OPÇÕES</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for procedimento in procedimentos %}
+          <tr>
+              <th scope="row">{{ procedimento.id }}</th>
+              <td>{{ procedimento.nome }}</td>
+              <td>{{ procedimento.categoria }}</td>
+              <td>R$ {{ procedimento.preco }}</td>
+              <td>{{ procedimento.descricao }}</td>
+              <td>{% if procedimento.ativo %}Sim{% else %}Não{% endif %}</td>
+              <td>{{ procedimento.tempo_estimado }} min</td>
+              <td>
+                  <button class="btn btn-warning btn-sm">
+                      <i class="fas fa-edit"></i> Editar
+                  </button>
+                  <button class="btn btn-danger btn-sm">
+                      <i class="fas fa-trash"></i> Excluir
+                  </button>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
 {% endblock %}
