@@ -48,5 +48,35 @@ def editar_procedimento_modal(id):
     db.session.commit()
     return redirect(url_for('procedimentos'))
 
+@app.route('/procedimentos/excluir/<int:id>', methods=['POST'])
+def excluir_procedimento(id):
+    procedimento = Procedimentos.query.get_or_404(id)
+    db.session.delete(procedimento)
+    db.session.commit()
+    return redirect(url_for('procedimentos'))
+
+@app.route('/procedimentos/cadastrar', methods=['POST'])
+def cadastrar_procedimento():
+    nome = request.form['nome']
+    categoria = request.form['categoria']
+    preco = request.form['preco']
+    descricao = request.form['descricao']
+    ativo = True if request.form.get('ativo') == 'on' else False
+    tempo_estimado = request.form['tempo_estimado']
+
+    novo_procedimento = Procedimentos(
+        nome=nome,
+        categoria=categoria,
+        preco=preco,
+        descricao=descricao,
+        ativo=ativo,
+        tempo_estimado=tempo_estimado
+    )
+
+    db.session.add(novo_procedimento)
+    db.session.commit()
+
+    return redirect(url_for('procedimentos'))
+
 
 
