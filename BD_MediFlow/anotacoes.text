@@ -1,0 +1,69 @@
+Anotações para implementar no sistema
+
+Mudança na tabela FUNCIONARIOS de:
+
+CREATE TABLE FUNCIONARIOS(
+    ID_FUNCIONARIO INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR(100) NOT NULL,
+    CPF VARCHAR(16) UNIQUE NOT NULL,
+    DATA_NASC DATE,
+    SEXO ENUM('M', 'F') NOT NULL,
+    EMAIL VARCHAR(100) UNIQUE NOT NULL,
+    FUNCAO ENUM('RECEPCIONISTA', 'MEDICO', 'ADMIN')
+);
+
+Para:
+
+CREATE TABLE FUNCIONARIOS(
+    ID_FUNCIONARIO INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR(100) NOT NULL,
+    CPF VARCHAR(16) UNIQUE NOT NULL,
+    DATA_NASC DATE,
+    SEXO ENUM('M', 'F') NOT NULL,
+    EMAIL VARCHAR(100) UNIQUE NOT NULL,
+    MATRICULA VARCHAR(20) UNIQUE NOT NULL,
+    SENHA_HASH VARCHAR(255) NOT NULL,
+    ID_PERFIL INT NOT NULL,
+    FOREIGN KEY (ID_PERFIL) REFERENCES PERFIS(ID)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+)ENGINE=InnoDB DEFAULT CHARSET = utf8mb4;
+
+ENDERECO_FUNCIONARIOS.id_funcionario UNIQUE garante 1 único endereço por funcionário.
+TELEFONE_FUNCIONARIOS sem UNIQUE em id_funcionario permite múltiplos telefones por funcionário.
+
+///////////////////////////////////////////////////////
+
+ON UPDATE CASCADE
+Sempre que você atualizar o valor da chave primária na tabela pai, o MySQL automaticamente propaga essa mudança para todos os registros filhos que referenciam aquele valor.
+CASCADE no UPDATE é útil quando a chave primária pode, excepcionalmente, mudar, e você quer manter a integridade automática dos relacionamentos.
+
+ON DELETE RESTRICT
+Impede a exclusão de um registro pai se ainda existirem registros filhos que o referenciam. Ou seja, o banco restringe (bloqueia) a operação de DELETE.
+ON DELETE RESTRICT em ENDERECO faz com que seja necessário eu primeiro excluir os registros de enderecos na tabela ENDERECO para que eu possa excluir um funcionario em FUNCIONARIOS
+O MySQL não permite que você remova um funcionário enquanto existir ao menos um registro de endereço apontando para ele.
+
+ON DELETE CASCADE EM TELEFONE
+Se você apagar o registro do funcionário na tabela FUNCIONARIOS, todos os telefones associados (filhos) em TELEFONE serão apagados automaticamente.
+
+////////////////////////////////////////////////////////
+
+ENGINE=InnoDB
+— Especifica que a tabela usará o InnoDB como mecanismo de armazenamento.
+— O InnoDB oferece recursos importantes, como:
+
+Transações ACID (commit, rollback, crash-safe)
+
+Integridade referencial (chaves estrangeiras com ON UPDATE/ON DELETE)
+
+Bloqueio em nível de linha para maior concorrência
+
+Buffers de cache para otimização de I/O
+
+DEFAULT CHARSET=utf8mb4
+— Define o conjunto de caracteres padrão da tabela como utf8mb4 (4-byte UTF-8).
+— Isso garante suporte a todos os caracteres Unicode, inclusive emojis e scripts não-latinos.
+— Se você usasse apenas utf8 (que, apesar do nome, é limitado a 3 bytes), ficariam de fora certos símbolos e letras de algumas línguas.
+
+///////////////////////////////////////////////////////
+
