@@ -1,8 +1,147 @@
 {% extends 'base.html' %}
 
 {% block head %}
+
 {% endblock %}
 
 {% block body %}
-    <h1>Pacientes</h1>
+<div class="container-fluid mt-4">
+    <h2>Pacientes</h2>
+    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarPaciente">
+        Novo Paciente
+    </button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Sexo</th>
+                <th>Email</th>
+                <th>Data de Nascimento</th>
+                <th>Telefone</th>
+                <th>Endereço</th>
+                <th>Observações</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td scope="row">{{ paciente.nome }}</td>
+                <td>{{ paciente.cpf }}</td>
+                <td>{{ paciente.sexo }}</td>
+                <td>{{ paciente.email }}</td>
+                <td>{{ paciente.data_nasc.strftime('%d/%m/%Y') if paciente.data_nasc else '' }}</td>
+                <td>
+                    {% if paciente.telefone %}
+                        ({{ paciente.telefone.ddd }}) {{ paciente.telefone.numero }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if paciente.endereco %}
+                        {{ paciente.endereco.rua }}, {{ paciente.endereco.numero }} - {{ paciente.endereco.bairro }} ({{ paciente.endereco.cidade }}/{{ paciente.endereco.uf }})
+                    {% endif %}
+                </td>
+                <td>{{ paciente.observacoes }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar{{ paciente.id }}">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ paciente.id }}">
+                        <i class="fas fa-trash"></i> Excluir
+                    </button>
+
+
+                    <div class="modal fade" id="modalEditar{{ paciente.id }}" tabindex="-1" aria-labelledby="modalLabel{{ paciente.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" action="{{ url_for('editar_paciente', id=paciente.id) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalLabel{{ paciente.id }}">Editar paciente</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% include 'form_paciente.html' with context %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="modalExcluir{{ paciente.id }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ paciente.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="{{ url_for('excluir_paciente', id=paciente.id) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalExcluirLabel{{ paciente.id }}">Confirmar Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                Você confirma a exclusão do paciente <strong>{{ paciente.nome }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+
+                </td>
+
+            
+            <div class="modal fade" id="modalEditarPaciente{{ paciente.id }}" tabindex="-1" aria-labelledby="modalEditarPacienteLabel{{ paciente.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form action="{{ url_for('editar_paciente', id=paciente.id) }}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarPacienteLabel{{ paciente.id }}">Editar Paciente</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% include 'form_paciente.html' %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade" id="modalCadastrarPaciente" tabindex="-1" aria-labelledby="modalCadastrarPacienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90vw;">
+      <div class="modal-content">
+        <form action="{{ url_for('cadastrar_paciente') }}" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalCadastrarPacienteLabel">Cadastrar Novo Paciente</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+            <div class="container">
+              {% include 'form_paciente.html' %}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+
+
 {% endblock %}

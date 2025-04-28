@@ -1,8 +1,204 @@
-{% extends "base.html" %}
-
-{% block head %}
-{% endblock %}
+{% extends 'base.html' %}
 
 {% block body %}
-    <h1>Funcionarios</h1>
+<div class="container-fluid mt-4">
+    <h2>Funcionários</h2>
+    <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#modalCadastrarFuncionario">
+        Novo Funcionário
+    </button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Email</th>
+                <th>Matrícula</th>
+                <th>Sexo</th>
+                <th>Data de Nascimento</th>
+                <th>Telefone</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for funcionario in funcionarios %}
+            <tr>
+                <td>{{ funcionario.nome }}</td>
+                <td>{{ funcionario.cpf }}</td>
+                <td>{{ funcionario.email }}</td>
+                <td>{{ funcionario.matricula }}</td>
+                <td>{{ funcionario.sexo }}</td>
+                <td>{{ funcionario.data_nasc.strftime('%d/%m/%Y') if funcionario.data_nasc else '' }}</td>
+                <td>
+                    {% if funcionario.telefone %}
+                        ({{ funcionario.telefone.ddd }}) {{ funcionario.telefone.numero }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if funcionario.endereco %}
+                        {{ funcionario.endereco.rua }}, {{ funcionario.endereco.numero }} - {{ funcionario.endereco.bairro }} ({{ funcionario.endereco.cidade }}/{{ funcionario.endereco.uf }})
+                    {% endif %}
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarFuncionario{{ funcionario.id_funcionario }}">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ funcionario.id_funcionario }}">
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Modal Editar Funcionário -->
+            <div class="modal fade" id="modalEditarFuncionario{{ funcionario.id_funcionario }}" tabindex="-1" aria-labelledby="modalEditarFuncionarioLabel{{ funcionario.id_funcionario }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 90vw;">
+                    <div class="modal-content">
+                        <form action="{{ url_for('editar_funcionario', id=funcionario.id_funcionario) }}" method="post">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditarFuncionarioLabel{{ funcionario.id_funcionario }}">Editar Funcionário</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                                <!-- Campos preenchidos -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="nome">Nome:</label>
+                                        <input type="text" name="nome" class="form-control" value="{{ funcionario.nome }}" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="cpf">CPF:</label>
+                                        <input type="text" name="cpf" class="form-control" value="{{ funcionario.cpf }}" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="sexo">Sexo:</label>
+                                        <select name="sexo" class="form-control" required>
+                                            <option value="M" {% if funcionario.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                                            <option value="F" {% if funcionario.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label for="email">Email:</label>
+                                        <input type="email" name="email" class="form-control" value="{{ funcionario.email }}" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="matricula">Matrícula:</label>
+                                        <input type="text" name="matricula" class="form-control" value="{{ funcionario.matricula }}" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="data_nasc">Data de Nascimento:</label>
+                                        <input type="date" name="data_nasc" class="form-control" value="{{ funcionario.data_nasc.strftime('%Y-%m-%d') if funcionario.data_nasc else '' }}">
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <h5>Endereço</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="rua">Rua:</label>
+                                        <input type="text" name="rua" class="form-control" value="{{ funcionario.endereco.rua if funcionario.endereco else '' }}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="numero">Número:</label>
+                                        <input type="number" name="numero" class="form-control" value="{{ funcionario.endereco.numero if funcionario.endereco else '' }}">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="bairro">Bairro:</label>
+                                        <input type="text" name="bairro" class="form-control" value="{{ funcionario.endereco.bairro if funcionario.endereco else '' }}">
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label for="cidade">Cidade:</label>
+                                        <input type="text" name="cidade" class="form-control" value="{{ funcionario.endereco.cidade if funcionario.endereco else '' }}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="uf">UF:</label>
+                                        <input type="text" name="uf" class="form-control" maxlength="2" value="{{ funcionario.endereco.uf if funcionario.endereco else '' }}">
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <h5>Telefone</h5>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="tipo_telefone">Tipo:</label>
+                                        <select name="tipo_telefone" class="form-control" required>
+                                            <option value="CEL" {% if funcionario.telefone and funcionario.telefone.tipo == 'CEL' %}selected{% endif %}>Celular</option>
+                                            <option value="RES" {% if funcionario.telefone and funcionario.telefone.tipo == 'RES' %}selected{% endif %}>Residencial</option>
+                                            <option value="COM" {% if funcionario.telefone and funcionario.telefone.tipo == 'COM' %}selected{% endif %}>Comercial</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="ddd">DDD:</label>
+                                        <input type="text" name="ddd" class="form-control" value="{{ funcionario.telefone.ddd if funcionario.telefone else '' }}">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="numero_telefone">Número:</label>
+                                        <input type="text" name="numero_telefone" class="form-control" value="{{ funcionario.telefone.numero if funcionario.telefone else '' }}">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Excluir Funcionário -->
+            <div class="modal fade" id="modalExcluir{{ funcionario.id_funcionario }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ funcionario.id_funcionario }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST" action="{{ url_for('excluir_funcionario', id=funcionario.id_funcionario) }}">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalExcluirLabel{{ funcionario.id_funcionario }}">Confirmar Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                Você confirma a exclusão do funcionário <strong>{{ funcionario.nome }}</strong>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Cadastrar Funcionário (sem valores preenchidos) -->
+<div class="modal fade" id="modalCadastrarFuncionario" tabindex="-1" aria-labelledby="modalCadastrarFuncionarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 90vw;">
+        <div class="modal-content">
+            <form action="{{ url_for('cadastrar_funcionario') }}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCadastrarFuncionarioLabel">Cadastrar Novo Funcionário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                    {% include 'form_funcionarios.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Cadastrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

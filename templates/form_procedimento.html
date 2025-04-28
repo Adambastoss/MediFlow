@@ -1,0 +1,40 @@
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Nome</label>
+        <input type="text" name="nome" class="form-control" value="{{ procedimento.nome if procedimento else '' }}" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label class="form-label">Categoria</label>
+        <select name="categoria" class="form-control" required>
+            <option value="">Selecione...</option>
+            <option value="CONSULTA" {% if procedimento and procedimento.categoria == 'CONSULTA' %}selected{% endif %}>Consulta</option>
+            <option value="EXAME LABORATORIAL" {% if procedimento and procedimento.categoria == 'EXAME LABORATORIAL' %}selected{% endif %}>Exame Laboratorial</option>
+            <option value="EXAME DE IMAGEM" {% if procedimento and procedimento.categoria == 'EXAME DE IMAGEM' %}selected{% endif %}>Exame de Imagem</option>
+            <option value="VACINA" {% if procedimento and procedimento.categoria == 'VACINA' %}selected{% endif %}>Vacina</option>
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label class="form-label">Preço</label>
+        <input type="number" step="0.01" name="preco" class="form-control" value="{{ procedimento.preco if procedimento else '' }}" required>
+    </div>
+    <div class="col-md-8 mb-3">
+        <label class="form-label">Tempo Estimado (min)</label>
+        <input type="text" name="tempo_estimado" class="form-control" value="{{ procedimento.tempo_estimado if procedimento else '' }}">
+    </div>
+</div>
+<div class="mb-3">
+    <label class="form-label">Descrição</label>
+    <textarea name="descricao" class="form-control">{{ procedimento.descricao if procedimento else '' }}</textarea>
+</div>
+<div class="mb-3 form-check">
+    <input type="checkbox" name="ativo" class="form-check-input" {% if procedimento and procedimento.ativo %}checked{% else %}checked{% endif %}>
+    <label class="form-check-label">Ativo</label>
+</div>
+
+{% endblock %}

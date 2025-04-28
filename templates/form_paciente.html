@@ -1,0 +1,90 @@
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Nome</label>
+        <input type="text" class="form-control" name="nome" value="{{ paciente.nome if paciente else '' }}" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>CPF</label>
+        <input type="text" class="form-control" name="cpf" value="{{ paciente.cpf if paciente else '' }}" required>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <label>Sexo</label>
+        <select name="sexo" class="form-control" required>
+            <option value="M" {% if paciente and paciente.sexo == 'M' %}selected{% endif %}>Masculino</option>
+            <option value="F" {% if paciente and paciente.sexo == 'F' %}selected{% endif %}>Feminino</option>
+        </select>
+    </div>
+    <div class="col-md-5 mb-3">
+        <label>Email</label>
+        <input type="email" class="form-control" name="email" value="{{ paciente.email if paciente else '' }}">
+    </div>
+    <div class="col-md-4 mb-3">
+        <label>Data de Nascimento</label>
+        <input type="date" class="form-control" name="data_nasc" value="{{ paciente.data_nasc if paciente and paciente.data_nasc else '' }}">
+    </div>
+</div>
+
+<div class="mb-3">
+    <label>Observações</label>
+    <textarea class="form-control" name="observacoes" rows="2">{{ paciente.observacoes if paciente else '' }}</textarea>
+</div>
+
+<hr>
+
+<h5>Endereço</h5>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Rua</label>
+        <input type="text" class="form-control" name="rua" value="{{ paciente.endereco.rua if paciente and paciente.endereco else '' }}" required>
+    </div>
+    <div class="col-md-2 mb-3">
+        <label>Número</label>
+        <input type="number" class="form-control" name="numero" value="{{ paciente.endereco.numero if paciente and paciente.endereco else '' }}" required>
+    </div>
+    <div class="col-md-4 mb-3">
+        <label>Bairro</label>
+        <input type="text" class="form-control" name="bairro" value="{{ paciente.endereco.bairro if paciente and paciente.endereco else '' }}" required>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Cidade</label>
+        <input type="text" class="form-control" name="cidade" value="{{ paciente.endereco.cidade if paciente and paciente.endereco else '' }}" required>
+    </div>
+    <div class="col-md-2 mb-3">
+        <label>UF</label>
+        <input type="text" class="form-control" name="uf" maxlength="2" value="{{ paciente.endereco.uf if paciente and paciente.endereco else '' }}" required>
+    </div>
+</div>
+
+<hr>
+
+<h5>Telefone</h5>
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <label>Tipo</label>
+        <select name="tipo_telefone" class="form-control" required>
+            <option value="CEL" {% if paciente and paciente.telefone and paciente.telefone.tipo == 'CEL' %}selected{% endif %}>Celular</option>
+            <option value="RES" {% if paciente and paciente.telefone and paciente.telefone.tipo == 'RES' %}selected{% endif %}>Residencial</option>
+            <option value="COM" {% if paciente and paciente.telefone and paciente.telefone.tipo == 'COM' %}selected{% endif %}>Comercial</option>
+        </select>
+    </div>
+    <div class="col-md-2 mb-3">
+        <label>DDD</label>
+        <input type="text" class="form-control" name="ddd" value="{{ paciente.telefone.ddd if paciente and paciente.telefone else '' }}" required>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>Número</label>
+        <input type="text" class="form-control" name="numero_telefone" value="{{ paciente.telefone.numero if paciente and paciente.telefone else '' }}" required>
+    </div>
+</div>
+
+{% endblock %}
