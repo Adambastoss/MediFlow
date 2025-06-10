@@ -33,6 +33,18 @@
 
 <div class="row mt-3">
     <div class="col-md-6">
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" class="form-control" {% if not funcionario %}required{% endif %}>
+        {% if funcionario %}<small class="form-text text-muted">Preencha para alterar a senha.</small>{% endif %}
+    </div>
+    <div class="col-md-6">
+        <label for="confirmar_senha">Confirmar Senha:</label>
+        <input type="password" name="confirmar_senha" class="form-control" {% if not funcionario %}required{% endif %}>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-6">
         <label for="id_perfil">Perfil:</label>
         <select name="id_perfil" class="form-control" required>
             {% for perfil in perfis %}

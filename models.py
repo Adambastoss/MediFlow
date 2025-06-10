@@ -1,4 +1,5 @@
 from MediFlow import db
+from flask_login import UserMixin # Importa UserMixin para o Flask-Login
 
 class Procedimentos(db.Model):
     __tablename__ = 'PROCEDIMENTOS'
@@ -16,7 +17,7 @@ class Pacientes(db.Model):
     
     id = db.Column('ID_PACIENTE', db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column('NOME', db.String(100), nullable=False)
-    cpf = db.Column('CPF', db.String(16), nullable=False)
+    cpf = db.Column('CPF', db.String(16), nullable=False) # CPF aqui para pacientes também
     sexo = db.Column('SEXO', db.Enum('M', 'F'), nullable=False)
     email = db.Column('EMAIL', db.String(50), unique=True)
     data_nasc = db.Column('DATA_NASC', db.Date)
@@ -46,19 +47,17 @@ class TelefonePacientes(db.Model):
     id_paciente = db.Column('ID_PACIENTE', db.Integer, db.ForeignKey('PACIENTES.ID_PACIENTE'), unique=True)
     
 
-
 class Perfis(db.Model):
     __tablename__ = 'perfis'
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50), nullable=False)
 
 
-
-class Funcionarios(db.Model):
+class Funcionarios(db.Model, UserMixin): # <--- Adicione UserMixin aqui
     __tablename__ = 'funcionarios'
     id_funcionario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100), nullable=False)
-    cpf = db.Column(db.String(16), unique=True, nullable=False)
+    cpf = db.Column(db.String(16), unique=True, nullable=False) # CPF como campo de login principal
     data_nasc = db.Column(db.Date)
     sexo = db.Column(db.Enum('M', 'F'), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
@@ -70,20 +69,13 @@ class Funcionarios(db.Model):
     endereco = db.relationship('EnderecoFuncionarios', backref='funcionario', uselist=False)
     telefone = db.relationship('TelefoneFuncionarios', backref='funcionario', uselist=False)
 
-class EnderecoFuncionarios(db.Model):
-    __tablename__ = 'endereco_funcionarios'
-    id_endereco = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    bairro = db.Column(db.String(60), nullable=False)
-    rua = db.Column(db.String(60), nullable=False)
-    numero = db.Column(db.Integer, nullable=False)
-    cidade = db.Column(db.String(40), nullable=False)
-    uf = db.Column(db.String(2), nullable=False)
-    id_funcionario = db.Column(db.Integer, db.ForeignKey('funcionarios.id_funcionario'), unique=True)
+    # Métodos essenciais para o Flask-Login:
+    def get_id(self):
+        """Retorna o ID único do usuário, necessário para o Flask-Login."""
+        return str(self.id_funcionario)
 
-class TelefoneFuncionarios(db.Model):
-    __tablename__ = 'telefone_funcionarios'
-    id_telefone = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tipo = db.Column(db.Enum('RES', 'COM', 'CEL'), nullable=False)
-    ddd = db.Column(db.String(5), nullable=False)
-    numero = db.Column(db.String(15), nullable=False)
-    id_funcionario = db.Column(db.Integer, db.ForeignKey('funcionarios.id_funcionario'))
+    # is_active, is_authenticated e is_anonymous já são implementados por UserMixin.
+    # Você pode sobrescrevê-los se precisar de lógica personalizada,
+    # por exemplo, se tiver um campo 'ativo' no Funcionarios:
+    # def is_active(self):
+    #    return self.ativo 
