@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% include 'alerts.html' %}
 {% block body %}
 <div class="container-fluid mt-4">
     <h2>Funcionários</h2>
@@ -51,7 +51,7 @@
                 </td>
             </tr>
 
-            <!-- Modal Editar Funcionário -->
+            <!-- Modal de Edição -->
             <div class="modal fade" id="modalEditarFuncionario{{ funcionario.id_funcionario }}" tabindex="-1" aria-labelledby="modalEditarFuncionarioLabel{{ funcionario.id_funcionario }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 90vw;">
                     <div class="modal-content">
@@ -61,7 +61,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                             </div>
                             <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
-                                <!-- Campos preenchidos -->
+                                <!-- Dados pessoais -->
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="nome">Nome:</label>
@@ -93,6 +93,15 @@
                                         <label for="data_nasc">Data de Nascimento:</label>
                                         <input type="date" name="data_nasc" class="form-control" value="{{ funcionario.data_nasc.strftime('%Y-%m-%d') if funcionario.data_nasc else '' }}">
                                     </div>
+                                </div>
+
+                                <div class="col-md-6 mt-3">
+                                    <label for="id_perfil">Perfil:</label>
+                                    <select name="id_perfil" class="form-control" required>
+                                        <option value="1" {% if funcionario.id_perfil == 1 %}selected{% endif %}>ADMIN</option>
+                                        <option value="2" {% if funcionario.id_perfil == 2 %}selected{% endif %}>MÉDICO</option>
+                                        <option value="3" {% if funcionario.id_perfil == 3 %}selected{% endif %}>RECEPCIONISTA</option>
+                                    </select>
                                 </div>
 
                                 <hr>
@@ -146,7 +155,17 @@
                                     </div>
                                 </div>
 
+                                <hr>
+
+                                <h5>Credenciais de Acesso</h5>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label for="senha">Senha:</label>
+                                        <input type="password" name="senha" class="form-control" placeholder="Deixe em branco para não alterar a senha">
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                             </div>
@@ -155,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Modal Excluir Funcionário -->
+            <!-- Modal de Exclusão -->
             <div class="modal fade" id="modalExcluir{{ funcionario.id_funcionario }}" tabindex="-1" aria-labelledby="modalExcluirLabel{{ funcionario.id_funcionario }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -181,7 +200,7 @@
     </table>
 </div>
 
-<!-- Modal Cadastrar Funcionário (sem valores preenchidos) -->
+<!-- Modal de Cadastro -->
 <div class="modal fade" id="modalCadastrarFuncionario" tabindex="-1" aria-labelledby="modalCadastrarFuncionarioLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 90vw;">
         <div class="modal-content">

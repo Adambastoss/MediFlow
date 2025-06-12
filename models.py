@@ -1,4 +1,6 @@
 from MediFlow import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Procedimentos(db.Model):
     __tablename__ = 'PROCEDIMENTOS'
@@ -50,11 +52,11 @@ class TelefonePacientes(db.Model):
 class Perfis(db.Model):
     __tablename__ = 'perfis'
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String(50), unique=True, nullable=False)
 
 
 
-class Funcionarios(db.Model):
+class Funcionarios(db.Model, UserMixin):
     __tablename__ = 'funcionarios'
     id_funcionario = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100), nullable=False)
@@ -69,6 +71,12 @@ class Funcionarios(db.Model):
     perfil = db.relationship('Perfis', backref='funcionarios', lazy=True)
     endereco = db.relationship('EnderecoFuncionarios', backref='funcionario', uselist=False)
     telefone = db.relationship('TelefoneFuncionarios', backref='funcionario', uselist=False)
+
+    def check_password(self, senha):
+        return check_password_hash(self.senha_hash, senha)
+
+    def get_id(self):
+        return str(self.id_funcionario)
 
 class EnderecoFuncionarios(db.Model):
     __tablename__ = 'endereco_funcionarios'

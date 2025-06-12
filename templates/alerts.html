@@ -1,0 +1,14 @@
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const alertList = document.querySelectorAll('.alert');
+        alertList.forEach(function(alert) {
+        setTimeout(function () {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+            setTimeout(function () {
+                alert.remove();
+        }, 500);
+      }, 5000); // tempo de exibição em milissegundos (5 segundos)
+    });
+  });
+</script>
